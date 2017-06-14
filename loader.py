@@ -26,7 +26,7 @@ def load_cpcd(fn):
 def load_file_with_id(dir, id, format='cpcd'):
     print("loading data from folder...")
 
-    for _, _, files in os.walk(dir):
+    for _, _, files in sorted(os.walk(dir)):
         # print("number of files: ", len(files))
         # for file in files:
         #     file_path = os.path.join(dir, file)
@@ -52,10 +52,10 @@ def load_data_from_folder(dir, format = 'cpcd'):
         data_loader = load_cepton_csv
 
     data_set = []
-    for _, _, files in os.walk(dir):
+    for _, _, files in ( os.walk(dir) ):
         for file in files:
             file_path = os.path.join(dir, file)
-            # print('file name:', file_path)
+            print('file name:', file_path)
             # data_set = np.concatenate((data_set,load_cpcd(file_path)))
             data_set.append(data_loader(file_path))
 

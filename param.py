@@ -8,4 +8,5 @@ def get_argument():
     parser.add_argument('--format', type=str, default='cpcd', help='file format')
     parser.add_argument('--gap', type=float, default=0, help='merge duplicate data in center')
     parser.add_argument('--vx', type=float, default=0, help='speed in x axis')
+    parser.add_argument('--vy', type=float, default=0, help='speed in y axis')
     return parser.parse_args()
