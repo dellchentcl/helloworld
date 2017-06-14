@@ -53,7 +53,7 @@ def load_data_from_folder(dir, format = 'cpcd'):
 
     data_set = []
     for _, _, files in ( os.walk(dir) ):
-        for file in files:
+        for file in sorted(files):
             file_path = os.path.join(dir, file)
             print('file name:', file_path)
             # data_set = np.concatenate((data_set,load_cpcd(file_path)))
