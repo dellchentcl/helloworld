@@ -13,7 +13,7 @@ from loader import *
 from extract_wqfmt import *
 from filters import *
 
-THRESHOLDE_LiDAR = -1.1
+THRESHOLDE_LiDAR = 27
 
 def plot_cpcb(x, y, z, c):
     fig = plt.figure()
@@ -22,13 +22,11 @@ def plot_cpcb(x, y, z, c):
     plt.show()
     pass
 
-
 pause = False
 get_df = lambda d: pd.DataFrame({"time": d[:, 0].ravel(), "x": d[:, 1].ravel(), "y": d[:, 2].ravel(),
                                  "z": d[:, 3].ravel(), "indensity": d[:, 4].ravel()})
 
 def plot_dataset_with_animation(dataset, max_frame_num):
-    # filter = lambda data: [p for p in data if p[2]<20 ]
     data = dataset[0]
     df = get_df(data)
     #
@@ -52,7 +50,8 @@ def plot_dataset_with_animation(dataset, max_frame_num):
         global THRESHOLDE_LiDAR
         d = dataset[num]
 
-        d = distance_filter(d)
+        # d = distance_filter(d)
+        d = filters(d)
 
         mn = np.mean(d[:,3])
         print("mean of z: ", mn)
@@ -74,9 +73,9 @@ def plot_dataset_with_animation(dataset, max_frame_num):
     # fig.canvas.mpl_connect('button_press_event', on_click)
     fig.canvas.mpl_connect('key_press_event', lambda event: on_key(event))
 
-    plt.xlim(-6,6)
-    plt.ylim(3, 14)
-    ax.set_zlim(-2, 4)
+    # plt.xlim(-6,6)
+    # plt.ylim(3, 14)
+    # ax.set_zlim(-2, 4)
 
     plt.show()
     pass
@@ -89,4 +88,4 @@ if __name__ == '__main__':
     print(ds.shape)
     # plot_cpcb(data[:, 1].ravel(), data[:,2].ravel(), data[:, 3].ravel(), data[:, 4].ravel())
     plot_dataset_with_animation(ds, frame_num)
-    # plot_per_frame(ds)
+

@@ -20,8 +20,9 @@ def load_cpcd(fn):
                 break
             datas.append(struct.unpack(FMT_CPCB, data))
             # print("timestamp, X/Y/Z/Intensity", data[0], data[1], data[2], data[3], data[4])
-
-    return np.array(datas)
+    ds = np.array(datas)
+    # print("Shape of data from file: ", ds.shape, fn)
+    return ds
 
 def load_file_with_id(dir, id, format='cpcd'):
     print("loading data from folder...")
@@ -44,7 +45,7 @@ def load_file_with_id(dir, id, format='cpcd'):
 
     return np.array(data)
 
-def load_data_from_folder(dir, format = 'cpcd'):
+def load_data_from_folder(dir, format = 'cpcd', max_file = 1000):
     # data_set = load_cpcd(FILE_NAME)
     print("loading data from folder...")
     data_loader = load_cpcd
@@ -53,11 +54,15 @@ def load_data_from_folder(dir, format = 'cpcd'):
 
     data_set = []
     for _, _, files in ( os.walk(dir) ):
+        f = 0
         for file in sorted(files):
+            if(f > max_file):
+                break
             file_path = os.path.join(dir, file)
             print('file name:', file_path)
             # data_set = np.concatenate((data_set,load_cpcd(file_path)))
             data_set.append(data_loader(file_path))
+            f += 1
 
     print("FRAME-ID: ", len(data_set))
     return np.array(data_set)
