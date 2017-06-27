@@ -20,8 +20,13 @@ def load_cpcd(fn):
                 break
             datas.append(struct.unpack(FMT_CPCB, data))
             # print("timestamp, X/Y/Z/Intensity", data[0], data[1], data[2], data[3], data[4])
-    ds = np.array(datas)
-    # print("Shape of data from file: ", ds.shape, fn)
+
+    return np.array(datas)
+
+def load_files(f_list):
+    ds = []
+    for f in f_list:
+        ds.append(load_cpcd(f))
     return ds
 
 def load_file_with_id(dir, id, format='cpcd'):
@@ -45,7 +50,7 @@ def load_file_with_id(dir, id, format='cpcd'):
 
     return np.array(data)
 
-def load_data_from_folder(dir, format = 'cpcd', max_file = 1000):
+def load_data_from_folder(dir, format = 'cpcd'):
     # data_set = load_cpcd(FILE_NAME)
     print("loading data from folder...")
     data_loader = load_cpcd
@@ -54,15 +59,29 @@ def load_data_from_folder(dir, format = 'cpcd', max_file = 1000):
 
     data_set = []
     for _, _, files in ( os.walk(dir) ):
-        f = 0
         for file in sorted(files):
-            if(f > max_file):
-                break
             file_path = os.path.join(dir, file)
             print('file name:', file_path)
             # data_set = np.concatenate((data_set,load_cpcd(file_path)))
             data_set.append(data_loader(file_path))
-            f += 1
 
     print("FRAME-ID: ", len(data_set))
     return np.array(data_set)
+
+def ds2xyz(ds, fn):
+    with open(fn, 'w+') as ofile:
+        for r in ds:
+            print(r)
+            rec = str(r[1]) + " " + str(r[2]) + " " + str(r[3]) + "\n"
+            ofile.write(rec)
+
+def rawds2xyz(ds, fn):
+    with open(fn, 'w+') as ofile:
+        for r in ds:
+            print(r)
+            rec = str(r[0]) + " " + str(r[1]) + " " + str(r[2]) + "\n"
+            ofile.write(rec)
+            
+def convert(ifile, ofile):
+    ds = load_cpcd(ifile)
+    ds2xyz(ds, ofile)
